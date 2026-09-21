@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>SeaNova Admin</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.24.7/babel.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23070F0E'/%3E%3Ccircle cx='16' cy='16' r='7' fill='%233FE0C5'/%3E%3C/svg%3E" />
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap');
+  html, body { margin: 0; background: #070F0E; color: #EDF5F3; font-family: Inter, sans-serif; }
+  * { box-sizing: border-box; }
+  ::-webkit-scrollbar { width: 6px; } ::-webkit-scrollbar-track { background: #0E1B19; } ::-webkit-scrollbar-thumb { background: #3FE0C5; border-radius: 3px; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel" data-presets="react">
+const { useState, useEffect, useRef } = React;
+
+const SUPABASE_URL = "https://frrfhzpyleytxyjfdqjk.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZycmZoenB5bGV5dHh5amZkcWprIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg3ODk3NzgsImV4cCI6MjEwNDM2NTc3OH0.rs2_pvGkkAReo8X1-wZ3wrnWxSykRXUzPY687PyACFU";
+const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+const C = {
+  base: "#070F0E", surface: "#0E1B19", surfaceAlt: "#101F1D",
+  border: "rgba(255,255,255,0.08)", borderStrong: "rgba(255,255,255,0.14)",
+  text: "#EDF5F3", muted: "#8FA6A1", mutedDim: "#5C726D",
+  accent: "#3FE0C5", accentDim: "rgba(63,224,197,0.12)",
+  offer: "#FF6B4A", offerDim: "rgba(255,107,74,0.12)",
+};
+
+function Badge({ children, color = C.accent }) {
+  return (
+    <span style={{ background: "rgba(63,224,197,0.1)", color, border: `1px solid ${color}`, borderRadius: 999, padding: "2px 10px", fontSize: 11, fontWeight: 500, whiteSpace: "nowrap" }}>
+      {children}
+    </span>
+  );
+}
+
+function StatCard({ label, value, sub }) {
+  return (
+    <div style={{ background: C.surface, border: `1px solid ${C.border}`, borderRadius: 8, padding: "16px 20px", minWidth: 140 }}>
+      <div style={{ fontSize: 28, fontFamily: "Fraunces, serif", color: C.text, fontWeight: 500 }}>{value ?? "—"}</div>
+      <div style={{ fontSize: 13, color: C.accent, marginTop: 2 }}>{label}</div>
+      {sub && <div style={{ fontSize: 11, color: C.mutedDim, marginTop: 2 }}>{sub}</div>}
+    </div>
+  );
+}
+
+function Input({ value, onChange, placeholder, style }) {
+  return (
+    <input
+      value={value}
+      onChange={onChange}
+      placeholder={placeholder}
+      style={{ background: C.surfaceAlt, border: `1px solid ${C.border}`, borderRadius: 6, padding: "7px 12px", color: C.text, fontSize: 13, outline: "none", width: "100%", ...style }}
+    />
+  );
+}
+
+function ExpandableRow({ row, columns, extra }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <>
+      <tr
+        onClick={() => setOpen(!open)}
+        style={{ cursor: "pointer", borderBottom: `1px solid ${C.border}`, background: open ? C.surfaceAlt : "transparent" }}
+      >
+        {columns.map((col) => (
+          <td key={col.key} style={{ padding: "10px 14px", fontSize: 13, color: col.muted ? C.mutedDim : C.text, whiteSpace: "nowrap" }}>
+            {col.render ? col.render(row) : (row[col.key] ?? "—")}
+          </td>
+        ))}
+        <td style={{ padding: "10px 14px", fontSize: 13, color: C.mutedDim, textAlign: "right" }}>{open ? "▲" : "▼"}</td>
+      </tr>
+      {open && (
+        <tr style={{ borderBottom: `1px solid ${C.border}`, background: C.surfaceAlt }}>
+          <td colSpan={columns.length + 1} style={{ padding: "12px 14px" }}>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))", gap: 10 }}>
+              {Object.entries(row).map(([k, v]) => (
+                <div key={k}>
+                  <div style={{ fontSize: 10, color: C.mutedDim, textTransform: "uppercase", letterSpacing: 1 }}>{k}</div>
+                  <div style={{ fontSize: 13, color: C.text, marginTop: 2, wordBreak: "break-word" }}>{String(v ?? "—")}</div>
+                </div>
+              ))}
+            </div>
+            {extra && <div style={{ marginTop: 12 }}>{extra(row)}</div>}
+          </td>
+        </tr>
+      )}
+    </>
+  );
+}
+
+function Table({ rows, columns, extra, emptyMsg }) {
+  if (!rows.length) return <div style={{ padding: "32px 0", textAlign: "center", color: C.mutedDim, fontSize: 13 }}>{emptyMsg || "No records found."}</div>;
+  return (
+    <div style={{ overflowX: "auto" }}>
+      <table style={{ width: "100%", borderCollapse: "collapse" }}>
+        <thead>
+          <tr style={{ borderBottom: `1px solid ${C.borderStrong}` }}>
+            {columns.map((col) => (
+              <th key={col.key} style={{ padding: "8px 14px", textAlign: "left", fontSize: 11, color: C.mutedDim, fontWeight: 500, textTransform: "uppercase", letterSpacing: 1, whiteSpace: "nowrap" }}>{col.label}</th>
+            ))}
+            <th style={{ width: 40 }} />
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map((row, i) => <ExpandableRow key={row.id ?? i} row={row} columns={columns} extra={extra} />)}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+function filterRows(rows, search, dateFrom, dateTo) {
+  let r = rows;
+  if (search) {
+    const q = search.toLowerCase();
+    r = r.filter((row) => Object.values(row).some((v) => String(v ?? "").toLowerCase().includes(q)));
+  }
+  if (dateFrom) r = r.filter((row) => row.created_at && row.created_at >= dateFrom);
+  if (dateTo)   r = r.filter((row) => row.created_at && row.created_at <= dateTo + "T23:59:59");
+  return r;
+}
+
+function FilterBar({ search, setSearch, dateFrom, setDateFrom, dateTo, setDateTo }) {
+  return (
+    <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 16 }}>
+      <Input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search…" style={{ maxWidth: 220 }} />
+      <input type="date" value={dateFrom} onChange={(e) => setDateFrom(e.target.value)}
+        style={{ background: C.surfaceAlt, border: `1px solid ${C.border}`, borderRadius: 6, padding: "7px 10px", color: C.muted, fontSize: 13, outline: "none" }} />
+      <input type="date" value={dateTo} onChange={(e) => setDateTo(e.target.value)}
+        style={{ background: C.surfaceAlt, border: `1px solid ${C.border}`, borderRadius: 6, padding: "7px 10px", color: C.muted, fontSize: 13, outline: "none" }} />
+      {(search || dateFrom || dateTo) && (
+        <button onClick={() => { setSearch(""); setDateFrom(""); setDateTo(""); }}
+          style={{ background: "transparent", border: `1px solid ${C.border}`, borderRadius: 6, padding: "7px 12px", color: C.mutedDim, fontSize: 13, cursor: "pointer" }}>
+          Clear
+        </button>
+      )}
+    </div>
+  );
+}
+
+function OrdersTab({ data }) {
+  const [search, setSearch] = useState(""); const [dateFrom, setDateFrom] = useState(""); const [dateTo, setDateTo] = useState("");
+  const rows = filterRows(data, search, dateFrom, dateTo);
+  const cols = [
+    { key: "name", label: "Name" },
+    { key: "email", label: "Email", muted: true },
+    { key: "service", label: "Service", render: (r) => <Badge>{r.service}</Badge> },
+    { key: "budget", label: "Budget" },
+    { key: "timeline", label: "Timeline" },
+    { key: "created_at", label: "Date", muted: true, render: (r) => r.created_at ? new Date(r.created_at).toLocaleDateString("en-IN") : "—" },
+  ];
+  return (
+    <>
+      <FilterBar search={search} setSearch={setSearch} dateFrom={dateFrom} setDateFrom={setDateFrom} dateTo={dateTo} setDateTo={setDateTo} />
+      <Table rows={rows} columns={cols} emptyMsg="No project orders yet." />
+    </>
+  );
+}
+
+function InquiriesTab({ data }) {
+  const [search, setSearch] = useState(""); const [dateFrom, setDateFrom] = useState(""); const [dateTo, setDateTo] = useState("");
+  const rows = filterRows(data, search, dateFrom, dateTo);
+  const cols = [
+    { key: "name", label: "Name" },
+    { key: "email", label: "Email", muted: true },
+    { key: "service", label: "Service", render: (r) => <Badge>{r.service}</Badge> },
+    { key: "volume", label: "Volume/mo" },
+    { key: "budget", label: "Budget" },
+    { key: "created_at", label: "Date", muted: true, render: (r) => r.created_at ? new Date(r.created_at).toLocaleDateString("en-IN") : "—" },
+  ];
+  return (
+    <>
+      <FilterBar search={search} setSearch={setSearch} dateFrom={dateFrom} setDateFrom={setDateFrom} dateTo={dateTo} setDateTo={setDateTo} />
+      <Table rows={rows} columns={cols} emptyMsg="No retainer inquiries yet." />
+    </>
+  );
+}
+
+function ReviewsTab({ data, onToggleApproval }) {
+  const [search, setSearch] = useState(""); const [dateFrom, setDateFrom] = useState(""); const [dateTo, setDateTo] = useState("");
+  const rows = filterRows(data, search, dateFrom, dateTo);
+  const cols = [
+    { key: "name", label: "Name" },
+    { key: "service", label: "Service", render: (r) => <Badge>{r.service}</Badge> },
+    { key: "rating", label: "Rating", render: (r) => "★".repeat(r.rating ?? 0) + "☆".repeat(5 - (r.rating ?? 0)) },
+    { key: "approved", label: "Status", render: (r) => r.approved ? <Badge color={C.accent}>Approved</Badge> : <Badge color={C.offer}>Pending</Badge> },
+    { key: "created_at", label: "Date", muted: true, render: (r) => r.created_at ? new Date(r.created_at).toLocaleDateString("en-IN") : "—" },
+  ];
+  const extra = (row) => (
+    <button
+      onClick={(e) => { e.stopPropagation(); onToggleApproval(row); }}
+      style={{ background: row.approved ? C.offerDim : C.accentDim, border: `1px solid ${row.approved ? C.offer : C.accent}`, borderRadius: 6, padding: "6px 14px", color: row.approved ? C.offer : C.accent, fontSize: 13, cursor: "pointer" }}
+    >
+      {row.approved ? "Unapprove" : "Approve"}
+    </button>
+  );
+  return (
+    <>
+      <FilterBar search={search} setSearch={setSearch} dateFrom={dateFrom} setDateFrom={setDateFrom} dateTo={dateTo} setDateTo={setDateTo} />
+      <Table rows={rows} columns={cols} extra={extra} emptyMsg="No reviews yet." />
+    </>
+  );
+}
+
+function Dashboard({ user }) {
+  const [tab, setTab] = useState("orders");
+  const [orders, setOrders] = useState([]);
+  const [inquiries, setInquiries] = useState([]);
+  const [reviews, setReviews] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    Promise.all([
+      sb.from("project_inquiries").select("*").order("created_at", { ascending: false }),
+      sb.from("ongoing_inquiries").select("*").order("created_at", { ascending: false }),
+      sb.from("reviews").select("*").order("created_at", { ascending: false }),
+    ]).then(([o, i, r]) => {
+      setOrders(o.data ?? []);
+      setInquiries(i.data ?? []);
+      setReviews(r.data ?? []);
+      setLoading(false);
+    });
+  }, []);
+
+  async function toggleApproval(review) {
+    const next = !review.approved;
+    await sb.from("reviews").update({ approved: next }).eq("id", review.id);
+    setReviews((prev) => prev.map((r) => r.id === review.id ? { ...r, approved: next } : r));
+  }
+
+  async function handleSignOut() {
+    await sb.auth.signOut();
+    window.location.reload();
+  }
+
+  const now = new Date();
+  const weekAgo = new Date(now - 7 * 24 * 60 * 60 * 1000).toISOString();
+  const ordersThisWeek = orders.filter((o) => o.created_at && o.created_at >= weekAgo).length;
+  const pendingReviews = reviews.filter((r) => !r.approved).length;
+
+  const tabs = [
+    { key: "orders", label: "Project Orders", count: orders.length },
+    { key: "inquiries", label: "Retainer Inquiries", count: inquiries.length },
+    { key: "reviews", label: "Reviews", count: reviews.length },
+  ];
+
+  return (
+    <div style={{ minHeight: "100vh", background: C.base }}>
+      <header style={{ borderBottom: `1px solid ${C.border}`, padding: "14px 24px", display: "flex", alignItems: "center", justifyContent: "space-between", background: C.base, position: "sticky", top: 0, zIndex: 10 }}>
+        <span style={{ fontFamily: "Fraunces, serif", fontSize: 18, color: C.text }}>SeaNova <span style={{ fontSize: 12, color: C.mutedDim }}>Admin</span></span>
+        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+          <span style={{ fontSize: 12, color: C.mutedDim }}>{user.email}</span>
+          <button onClick={handleSignOut} style={{ background: "transparent", border: `1px solid ${C.border}`, borderRadius: 6, padding: "5px 12px", color: C.muted, fontSize: 12, cursor: "pointer" }}>Sign out</button>
+        </div>
+      </header>
+
+      <div style={{ maxWidth: 1200, margin: "0 auto", padding: "24px 16px" }}>
+        {loading ? (
+          <div style={{ color: C.mutedDim, fontSize: 13, padding: 32, textAlign: "center" }}>Loading…</div>
+        ) : (
+          <>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: 12, marginBottom: 28 }}>
+              <StatCard label="Total orders" value={orders.length} />
+              <StatCard label="Retainer inquiries" value={inquiries.length} />
+              <StatCard label="Pending reviews" value={pendingReviews} sub="awaiting approval" />
+              <StatCard label="Orders this week" value={ordersThisWeek} />
+            </div>
+
+            <div style={{ display: "flex", gap: 4, marginBottom: 20, flexWrap: "wrap" }}>
+              {tabs.map((t) => (
+                <button key={t.key} onClick={() => setTab(t.key)}
+                  style={{ background: tab === t.key ? C.accentDim : "transparent", border: `1px solid ${tab === t.key ? C.accent : C.border}`, borderRadius: 6, padding: "7px 16px", color: tab === t.key ? C.accent : C.muted, fontSize: 13, cursor: "pointer", display: "flex", alignItems: "center", gap: 6 }}>
+                  {t.label}
+                  <span style={{ background: C.surfaceAlt, borderRadius: 999, padding: "1px 7px", fontSize: 11, color: C.mutedDim }}>{t.count}</span>
+                </button>
+              ))}
+            </div>
+
+            <div style={{ background: C.surface, border: `1px solid ${C.border}`, borderRadius: 8, padding: "16px 0" }}>
+              <div style={{ padding: "0 16px 12px", borderBottom: `1px solid ${C.border}`, marginBottom: 8 }}>
+                <span style={{ fontFamily: "Fraunces, serif", fontSize: 16, color: C.text }}>
+                  {tabs.find((t) => t.key === tab)?.label}
+                </span>
+              </div>
+              <div style={{ padding: "0 8px" }}>
+                {tab === "orders" && <OrdersTab data={orders} />}
+                {tab === "inquiries" && <InquiriesTab data={inquiries} />}
+                {tab === "reviews" && <ReviewsTab data={reviews} onToggleApproval={toggleApproval} />}
+              </div>
+            </div>
+          </>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function Login() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  async function handleLogin(e) {
+    e.preventDefault();
+    setLoading(true);
+    setError("");
+    const { error } = await sb.auth.signInWithPassword({ email, password });
+    if (error) { setError(error.message); setLoading(false); }
+  }
+
+  return (
+    <div style={{ minHeight: "100vh", background: C.base, display: "flex", alignItems: "center", justifyContent: "center", padding: 16 }}>
+      <div style={{ width: "100%", maxWidth: 360, background: C.surface, border: `1px solid ${C.border}`, borderRadius: 10, padding: 32 }}>
+        <div style={{ fontFamily: "Fraunces, serif", fontSize: 22, color: C.text, marginBottom: 4 }}>SeaNova</div>
+        <div style={{ fontSize: 13, color: C.mutedDim, marginBottom: 28 }}>Admin access only</div>
+        <form onSubmit={handleLogin} style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+          <div>
+            <div style={{ fontSize: 11, color: C.mutedDim, marginBottom: 6, textTransform: "uppercase", letterSpacing: 1 }}>Email</div>
+            <Input value={email} onChange={(e) => setEmail(e.target.value)} placeholder="your@email.com" />
+          </div>
+          <div>
+            <div style={{ fontSize: 11, color: C.mutedDim, marginBottom: 6, textTransform: "uppercase", letterSpacing: 1 }}>Password</div>
+            <input type="password" value={password} onChange={(e) => setPassword(e.target.value)}
+              style={{ background: C.surfaceAlt, border: `1px solid ${C.border}`, borderRadius: 6, padding: "7px 12px", color: C.text, fontSize: 13, outline: "none", width: "100%" }} />
+          </div>
+          {error && <div style={{ fontSize: 12, color: C.offer }}>{error}</div>}
+          <button type="submit" disabled={loading}
+            style={{ background: C.accent, color: "#062420", border: "none", borderRadius: 6, padding: "10px 0", fontSize: 14, fontWeight: 600, cursor: loading ? "not-allowed" : "pointer", opacity: loading ? 0.7 : 1, marginTop: 4 }}>
+            {loading ? "Signing in…" : "Sign In"}
+          </button>
+        </form>
+      </div>
+    </div>
+  );
+}
+
+function App() {
+  const [user, setUser] = useState(null);
+  const [checking, setChecking] = useState(true);
+
+  useEffect(() => {
+    sb.auth.getSession().then(({ data }) => {
+      setUser(data.session?.user ?? null);
+      setChecking(false);
+    });
+    const { data: { subscription } } = sb.auth.onAuthStateChange((_e, session) => {
+      setUser(session?.user ?? null);
+    });
+    return () => subscription.unsubscribe();
+  }, []);
+
+  if (checking) return <div style={{ minHeight: "100vh", background: C.base, display: "flex", alignItems: "center", justifyContent: "center", color: C.mutedDim, fontSize: 13 }}>Loading…</div>;
+  return user ? <Dashboard user={user} /> : <Login />;
+}
+
+const root = ReactDOM.createRoot(document.getElementById("root"));
+root.render(<App />);
+</script>
+</body>
+</html>

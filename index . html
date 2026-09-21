@@ -1,0 +1,2228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>SeaNova AI Creative Studio | Your Ideas. Built Better.</title>
+<meta name="google-site-verification" content="xiQO5fXaU9xRwvE9-GCyiLWJaAwDnMW_9NYlptz-jIs" />
+<meta name="description" content="SeaNova AI Creative Studio — websites, YouTube thumbnails, and video editing, produced with AI-assisted workflows and human creative direction." />
+
+<!-- Social share preview (WhatsApp, Instagram, etc. read these when you paste the link) -->
+<meta property="og:type" content="website" />
+<meta property="og:title" content="SeaNova AI Creative Studio | Your Ideas. Built Better." />
+<meta property="og:description" content="Websites, YouTube thumbnails, and video editing — AI-assisted workflows with real human creative direction." />
+<!-- og:image needs a real hosted image URL once you have a domain — e.g. og:image content="https://yourdomain.com/preview.jpg" -->
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="SeaNova AI Creative Studio | Your Ideas. Built Better." />
+<meta name="twitter:description" content="Websites, YouTube thumbnails, and video editing — AI-assisted workflows with real human creative direction." />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23070F0E'/%3E%3Ccircle cx='16' cy='16' r='7' fill='%233FE0C5'/%3E%3C/svg%3E" />
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.24.7/babel.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="https://unpkg.com/@elevenlabs/convai-widget-embed" async type="text/javascript"></script>
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap');
+  html, body { margin: 0; background: #070F0E; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<elevenlabs-convai agent-id="agent_9301m2cpzj83fewtad5jw8vxs985"></elevenlabs-convai>
+
+<script type="text/babel" data-presets="react">
+
+const { useState, useEffect, useRef, Fragment } = React;
+
+/* --------------------------- inline icon set ----------------------------- */
+/* Small hand-drawn line icons (no external icon library needed) so this file
+   has zero non-CDN dependencies. */
+
+function Icon({ size = 24, style, children }) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      style={style}
+    >
+      {children}
+    </svg>
+  );
+}
+
+const Menu = (props) => (
+  <Icon {...props}>
+    <line x1="3" y1="6" x2="21" y2="6" />
+    <line x1="3" y1="12" x2="21" y2="12" />
+    <line x1="3" y1="18" x2="21" y2="18" />
+  </Icon>
+);
+
+const X = (props) => (
+  <Icon {...props}>
+    <line x1="18" y1="6" x2="6" y2="18" />
+    <line x1="6" y1="6" x2="18" y2="18" />
+  </Icon>
+);
+
+const ArrowUpRight = (props) => (
+  <Icon {...props}>
+    <line x1="7" y1="17" x2="17" y2="7" />
+    <polyline points="7 7 17 7 17 17" />
+  </Icon>
+);
+
+const Layout = (props) => (
+  <Icon {...props}>
+    <rect x="3" y="3" width="7" height="7" rx="1" />
+    <rect x="14" y="3" width="7" height="7" rx="1" />
+    <rect x="3" y="14" width="7" height="7" rx="1" />
+    <rect x="14" y="14" width="7" height="7" rx="1" />
+  </Icon>
+);
+
+const ImageIcon = (props) => (
+  <Icon {...props}>
+    <rect x="3" y="3" width="18" height="18" rx="2" />
+    <circle cx="8.5" cy="8.5" r="1.5" />
+    <polyline points="21 15 16 10 5 21" />
+  </Icon>
+);
+
+const Film = (props) => (
+  <Icon {...props}>
+    <rect x="3" y="3" width="18" height="18" rx="2" />
+    <line x1="3" y1="9" x2="21" y2="9" />
+    <line x1="3" y1="15" x2="21" y2="15" />
+    <line x1="9" y1="3" x2="9" y2="21" />
+    <line x1="15" y1="3" x2="15" y2="21" />
+  </Icon>
+);
+
+const Instagram = (props) => (
+  <Icon {...props}>
+    <rect x="3" y="3" width="18" height="18" rx="5" />
+    <circle cx="12" cy="12" r="4" />
+    <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none" />
+  </Icon>
+);
+
+const Mail = (props) => (
+  <Icon {...props}>
+    <rect x="3" y="5" width="18" height="14" rx="2" />
+    <polyline points="3 7 12 13 21 7" />
+  </Icon>
+);
+
+const MessageCircle = (props) => (
+  <Icon {...props}>
+    <path d="M21 11.5a8.5 8.5 0 0 1-8.5 8.5c-1.35 0-2.62-.32-3.75-.9L3 21l1.9-5.7A8.46 8.46 0 0 1 3 11.5 8.5 8.5 0 0 1 11.5 3 8.5 8.5 0 0 1 21 11.5z" />
+  </Icon>
+);
+
+const Play = (props) => (
+  <Icon {...props}>
+    <polygon points="6 4 20 12 6 20 6 4" fill="currentColor" stroke="none" />
+  </Icon>
+);
+
+const Smartphone = (props) => (
+  <Icon {...props}>
+    <rect x="6" y="2" width="12" height="20" rx="2" />
+    <line x1="11" y1="18" x2="13" y2="18" />
+  </Icon>
+);
+
+const ShieldCheck = (props) => (
+  <Icon {...props}>
+    <path d="M12 3l7 3v5c0 5-3.5 8.5-7 10-3.5-1.5-7-5-7-10V6l7-3z" />
+    <polyline points="9 12 11 14 15 10" />
+  </Icon>
+);
+
+const CheckCircle2 = (props) => (
+  <Icon {...props}>
+    <circle cx="12" cy="12" r="9" />
+    <polyline points="8 12 11 15 16 9" />
+  </Icon>
+);
+
+const XCircle = (props) => (
+  <Icon {...props}>
+    <circle cx="12" cy="12" r="9" />
+    <line x1="9" y1="9" x2="15" y2="15" />
+    <line x1="15" y1="9" x2="9" y2="15" />
+  </Icon>
+);
+
+const Clock = (props) => (
+  <Icon {...props}>
+    <circle cx="12" cy="12" r="9" />
+    <polyline points="12 7 12 12 15 14" />
+  </Icon>
+);
+
+function Star({ size = 24, filled, style }) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill={filled ? "currentColor" : "none"}
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      style={style}
+    >
+      <polygon points="12 2.5 15.1 9 22 9.8 17 14.6 18.2 21.5 12 18.1 5.8 21.5 7 14.6 2 9.8 8.9 9 12 2.5" />
+    </svg>
+  );
+}
+
+/* -------------------------------------------------------------------------
+   SeaNova AI Creative Studio — marketing site
+   Palette:  #070F0E base / #0E1A18 surface / #3FE0C5 accent (bioluminescent teal)
+   Type:     Fraunces (display/serif) + Inter (body/UI)
+   Concept:  deep, dark water — a single point of bioluminescent light rather
+   than generic gradients/glows. The accent is used sparingly and with intent.
+------------------------------------------------------------------------- */
+
+const COLORS = {
+  base: "#070F0E",
+  surface: "#0E1B19",
+  surfaceAlt: "#101F1D",
+  border: "rgba(255,255,255,0.08)",
+  borderStrong: "rgba(255,255,255,0.14)",
+  text: "#EDF5F3",
+  muted: "#8FA6A1",
+  mutedDim: "#5C726D",
+  accent: "#3FE0C5",
+  accentDim: "rgba(63,224,197,0.12)",
+  offer: "#FF6B4A",
+  offerDim: "rgba(255,107,74,0.12)",
+};
+
+const NAV_LINKS = [
+  { label: "Home", href: "#home" },
+  { label: "Services", href: "#services" },
+  { label: "Work", href: "#work" },
+  { label: "Reviews", href: "#reviews" },
+  { label: "About", href: "#about" },
+  { label: "Process", href: "#process" },
+  { label: "Terms", href: "#terms" },
+  { label: "Pay", href: "#payment" },
+  { label: "Contact", href: "#contact" },
+];
+
+/* Placeholder pricing — replace with your real rates. Amounts are in INR
+   since FamPay / UPI is India-only. Set a service's price to null to show
+   "Custom quote" instead of a fixed amount.
+
+   "originalPrice" + "note" power the launch-offer messaging (crossed-out
+   price, savings badge). For the website, originalPrice reflects the real
+   separate cost of a domain being bundled in for free — keep that honest.
+   For thumbnails/video, originalPrice is framed as the regular price once
+   the launch offer ends, so the "before" price stays truthful rather than
+   an invented discount. */
+const SERVICE_PRICING = [
+  {
+    name: "Website Design & Development",
+    price: 4999,
+    originalPrice: 5499,
+    note: "1st year domain included (~₹500 value) — renewal from year 2 is separate.",
+    domainNote: "Want a specific or premium domain name instead? Domain prices vary — the difference is billed separately.",
+    delivery: "Delivery: 5–7 days",
+    revisions: "2 free revisions included",
+  },
+  {
+    name: "YouTube Thumbnail Design",
+    price: 299,
+    originalPrice: 499,
+    note: "Launch price — regular price after launch is ₹499.",
+    delivery: "Delivery: under 24–48 hours",
+    revisions: "2 free revisions included",
+  },
+  {
+    name: "Video Editing",
+    price: 999,
+    originalPrice: 1499,
+    note: "Launch price — regular price after launch is ₹1,499.",
+    delivery: "Delivery: 1–3 days",
+    revisions: "2 free revisions included",
+  },
+];
+
+function getPricing(title) {
+  return SERVICE_PRICING.find((s) => s.name === title);
+}
+
+const SERVICES = [
+  {
+    icon: Layout,
+    title: "Website Design & Development",
+    description:
+      "Modern, responsive websites designed to make businesses look credible, memorable, and professional.",
+    items: ["Custom UI", "Responsive design", "Modern layouts", "Landing pages", "Business websites"],
+    cta: "Build My Website",
+    badge: "Free domain (1st yr)",
+  },
+  {
+    icon: ImageIcon,
+    title: "YouTube Thumbnail Design",
+    description:
+      "High-impact thumbnails designed to grab attention and communicate the video's idea instantly.",
+    items: ["Gaming", "Fitness", "Mystery", "Travel", "Business", "Other creator niches"],
+    cta: "Get Thumbnails",
+    badge: "Launch price",
+  },
+  {
+    icon: Film,
+    title: "Video Editing",
+    description: "Engaging video editing that turns raw footage into polished content.",
+    items: ["YouTube videos", "Shorts", "Reels", "Captions", "Motion graphics", "Pacing and cuts"],
+    cta: "Edit My Video",
+    badge: "Launch price",
+  },
+];
+
+const BEHANCE_URL = "https://www.behance.net/simaghobanerje";
+
+const CATEGORIES = ["All", "Websites", "Thumbnails", "Video"];
+
+/* Real portfolio data — there is NO limit on how many entries you add here.
+   Every project in this list renders as its own card automatically, so as
+   you finish new websites, thumbnails, or video edits, just copy one of the
+   objects below, paste it in, and fill in the name/category/url. The grid
+   and the category filters both scale to however many you add — 5, 50,
+   whatever. Fill in "url" with the live site, YouTube/Vimeo link, or
+   Behance/Drive link for that project; a card becomes clickable the moment
+   its url is set, and stays a placeholder slot until then. */
+const PROJECTS = [
+  { name: "Website Project 01", category: "Websites", url: "" },
+  { name: "Website Project 02", category: "Websites", url: "" },
+  { name: "Website Project 03", category: "Websites", url: "" },
+  { name: "Video Edit 01", category: "Video", url: "" },
+  { name: "Video Edit 02", category: "Video", url: "" },
+  { name: "Video Edit 03", category: "Video", url: "" },
+  {
+    name: "Thumbnail Work",
+    category: "Thumbnails",
+    url: BEHANCE_URL,
+    label: "View on Behance",
+  },
+  // Add more here any time — e.g.:
+  // { name: "Video Edit 04", category: "Video", url: "https://youtu.be/your-video" },
+];
+
+/* --------------------- real, saved, owner-approved reviews ----------------- */
+/* Fill these in from your Supabase project (Settings → API) to make reviews
+   actually save and go live once you approve them. Until you do, the site
+   falls back to the static REVIEWS list below and the form just confirms
+   receipt without saving anywhere — same as before. */
+const SUPABASE_URL = "https://frrfhzpyleytxyjfdqjk.supabase.co";
+const SUPABASE_ANON_KEY =
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZycmZoenB5bGV5dHh5amZkcWprIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg3ODk3NzgsImV4cCI6MjEwNDM2NTc3OH0.rs2_pvGkkAReo8X1-wZ3wrnWxSykRXUzPY687PyACFU";
+
+const supabaseClient =
+  SUPABASE_URL && SUPABASE_ANON_KEY && window.supabase
+    ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+    : null;
+
+/* Fallback used only if Supabase isn't configured yet — no fake reviews. */
+const REVIEWS = [];
+
+const WHY = [
+  {
+    title: "AI-Powered Workflow",
+    description: "Modern AI tools accelerate the creative production process.",
+  },
+  {
+    title: "Human Creative Direction",
+    description: "AI is a tool, not the entire creative process.",
+  },
+  {
+    title: "Built Around Your Goal",
+    description: "The work is matched to your brand and objective.",
+  },
+  {
+    title: "One Creative Studio",
+    description: "Websites, thumbnails, video editing, and advertising — from a single team.",
+  },
+];
+
+const PROCESS = [
+  {
+    n: "01",
+    title: "Tell Us What You Need",
+    description: "You explain your idea, business, content, or goal.",
+  },
+  {
+    n: "02",
+    title: "We Plan",
+    description: "We determine the right creative direction and requirements.",
+  },
+  {
+    n: "03",
+    title: "We Create",
+    description: "SeaNova produces the website, thumbnail, video, or advertisement.",
+  },
+  {
+    n: "04",
+    title: "You Review",
+    description: "You give feedback and the final creative is prepared.",
+  },
+];
+
+/* --------------------------- shared bits -------------------------------- */
+
+function Reveal({ children, className = "" }) {
+  const ref = useRef(null);
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setVisible(true);
+          obs.disconnect();
+        }
+      },
+      { threshold: 0.15 }
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
+
+  return (
+    <div
+      ref={ref}
+      className={className}
+      style={{
+        opacity: visible ? 1 : 0,
+        transform: visible ? "translateY(0)" : "translateY(16px)",
+        transition: "opacity 0.7s ease, transform 0.7s ease",
+      }}
+    >
+      {children}
+    </div>
+  );
+}
+
+function Eyebrow({ children }) {
+  return (
+    <span
+      className="text-sm"
+      style={{ color: COLORS.muted, fontFamily: "Inter, sans-serif" }}
+    >
+      {children}
+    </span>
+  );
+}
+
+function PrimaryButton({ children, onClick, className = "", disabled = false }) {
+  return (
+    <button
+      onClick={onClick}
+      disabled={disabled}
+      className={`inline-flex items-center gap-2 px-6 py-3 text-sm font-medium rounded-sm transition-all duration-200 hover:gap-3 ${className}`}
+      style={{
+        background: COLORS.accent,
+        color: "#062420",
+        fontFamily: "Inter, sans-serif",
+        opacity: disabled ? 0.6 : 1,
+        cursor: disabled ? "not-allowed" : "pointer",
+      }}
+    >
+      {children}
+      <ArrowUpRight size={16} />
+    </button>
+  );
+}
+
+function SecondaryButton({ children, onClick, className = "" }) {
+  return (
+    <button
+      onClick={onClick}
+      className={`inline-flex items-center gap-2 px-6 py-3 text-sm font-medium rounded-sm border transition-colors duration-200 ${className}`}
+      style={{
+        borderColor: COLORS.borderStrong,
+        color: COLORS.text,
+        fontFamily: "Inter, sans-serif",
+      }}
+    >
+      {children}
+    </button>
+  );
+}
+
+/* ------------------------------ mockups ---------------------------------- */
+/* Abstract, clearly-illustrative representations of the four service types —
+   not real client work, so nothing here misrepresents an actual project. */
+
+function WebsiteMockup() {
+  return (
+    <div
+      className="rounded-md overflow-hidden border"
+      style={{ background: COLORS.surfaceAlt, borderColor: COLORS.border }}
+    >
+      <div
+        className="flex items-center gap-1.5 px-3 py-2 border-b"
+        style={{ borderColor: COLORS.border }}
+      >
+        <span className="w-2 h-2 rounded-full" style={{ background: "#4a5a57" }} />
+        <span className="w-2 h-2 rounded-full" style={{ background: "#4a5a57" }} />
+        <span className="w-2 h-2 rounded-full" style={{ background: "#4a5a57" }} />
+      </div>
+      <div className="p-4 space-y-2">
+        <div className="h-2 w-1/3 rounded-full" style={{ background: COLORS.accent, opacity: 0.6 }} />
+        <div className="h-2 w-2/3 rounded-full" style={{ background: COLORS.border }} />
+        <div className="h-2 w-1/2 rounded-full" style={{ background: COLORS.border }} />
+        <div className="grid grid-cols-3 gap-2 pt-2">
+          <div className="h-10 rounded" style={{ background: COLORS.border }} />
+          <div className="h-10 rounded" style={{ background: COLORS.border }} />
+          <div className="h-10 rounded" style={{ background: COLORS.border }} />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function ThumbnailMockup() {
+  return (
+    <div
+      className="rounded-md overflow-hidden border relative aspect-video flex items-center justify-center"
+      style={{ background: COLORS.surfaceAlt, borderColor: COLORS.border }}
+    >
+      <div
+        className="absolute inset-0"
+        style={{
+          background:
+            "linear-gradient(135deg, rgba(63,224,197,0.18), transparent 60%)",
+        }}
+      />
+      <Play size={28} style={{ color: COLORS.accent }} />
+      <div
+        className="absolute bottom-2 left-2 px-2 py-0.5 text-xs rounded"
+        style={{ background: "rgba(0,0,0,0.5)", color: COLORS.text, fontFamily: "Inter, sans-serif" }}
+      >
+        12:04
+      </div>
+    </div>
+  );
+}
+
+function VideoMockup() {
+  return (
+    <div
+      className="rounded-md overflow-hidden border p-3"
+      style={{ background: COLORS.surfaceAlt, borderColor: COLORS.border }}
+    >
+      <div className="flex items-end gap-1 h-14">
+        {[40, 70, 30, 90, 55, 80, 45, 65, 35, 100, 50, 60].map((h, i) => (
+          <div
+            key={i}
+            className="flex-1 rounded-sm"
+            style={{
+              height: `${h}%`,
+              background: i === 9 ? COLORS.accent : COLORS.border,
+            }}
+          />
+        ))}
+      </div>
+      <div className="h-1 mt-3 rounded-full" style={{ background: COLORS.border }}>
+        <div className="h-1 rounded-full" style={{ width: "38%", background: COLORS.accent }} />
+      </div>
+    </div>
+  );
+}
+
+/* -------------------------------- sections -------------------------------- */
+
+function Nav({ menuOpen, setMenuOpen, onContactClick }) {
+  return (
+    <header
+      className="fixed top-0 left-0 right-0 z-40 border-b backdrop-blur"
+      style={{ background: "rgba(7,15,14,0.85)", borderColor: COLORS.border }}
+    >
+      <div className="max-w-6xl mx-auto px-5 sm:px-8 h-16 flex items-center justify-between">
+        <a
+          href="#home"
+          className="text-lg tracking-tight"
+          style={{ fontFamily: "Fraunces, serif", color: COLORS.text }}
+        >
+          SeaNova
+        </a>
+
+        <nav className="hidden md:flex items-center gap-8">
+          {NAV_LINKS.map((link) => (
+            <a
+              key={link.label}
+              href={link.href}
+              className="text-sm transition-colors duration-150"
+              style={{ color: COLORS.muted, fontFamily: "Inter, sans-serif" }}
+              onMouseEnter={(e) => (e.currentTarget.style.color = COLORS.text)}
+              onMouseLeave={(e) => (e.currentTarget.style.color = COLORS.muted)}
+            >
+              {link.label}
+            </a>
+          ))}
+        </nav>
+
+        <div className="hidden md:block">
+          <PrimaryButton onClick={() => onContactClick("project")}>Start a Project</PrimaryButton>
+        </div>
+
+        <button
+          className="md:hidden"
+          onClick={() => setMenuOpen(!menuOpen)}
+          aria-label="Toggle menu"
+          style={{ color: COLORS.text }}
+        >
+          {menuOpen ? <X size={22} /> : <Menu size={22} />}
+        </button>
+      </div>
+
+      {menuOpen && (
+        <div
+          className="md:hidden border-t px-5 py-4 flex flex-col gap-4"
+          style={{ borderColor: COLORS.border, background: COLORS.base }}
+        >
+          {NAV_LINKS.map((link) => (
+            <a
+              key={link.label}
+              href={link.href}
+              className="text-sm"
+              style={{ color: COLORS.muted, fontFamily: "Inter, sans-serif" }}
+              onClick={() => setMenuOpen(false)}
+            >
+              {link.label}
+            </a>
+          ))}
+          <PrimaryButton
+            className="w-full justify-center"
+            onClick={() => {
+              setMenuOpen(false);
+              onContactClick("project");
+            }}
+          >
+            Start a Project
+          </PrimaryButton>
+        </div>
+      )}
+    </header>
+  );
+}
+
+function Hero({ onContactClick }) {
+  return (
+    <section id="home" className="pt-36 pb-20 px-5 sm:px-8 max-w-6xl mx-auto">
+      <Reveal className="mb-10">
+        <a
+          href="#payment"
+          className="inline-flex items-center gap-2 px-4 py-2 rounded-full border text-xs sm:text-sm font-medium transition-transform duration-200 hover:scale-[1.02]"
+          style={{
+            borderColor: COLORS.offer,
+            background: COLORS.offerDim,
+            color: COLORS.offer,
+            fontFamily: "Inter, sans-serif",
+          }}
+        >
+          🔥 Launch Offer — bundle a website, get 1st-year domain free
+        </a>
+      </Reveal>
+      <div className="grid md:grid-cols-2 gap-14 items-center">
+        <Reveal>
+          <div>
+            <Eyebrow>AI-Powered Creative Studio</Eyebrow>
+            <h1
+              className="mt-4 text-4xl sm:text-5xl lg:text-6xl leading-[1.08]"
+              style={{ fontFamily: "Fraunces, serif", color: COLORS.text }}
+            >
+              Your Ideas. Built Better.
+            </h1>
+            <p
+              className="mt-6 text-base sm:text-lg max-w-md leading-relaxed"
+              style={{ color: COLORS.muted, fontFamily: "Inter, sans-serif" }}
+            >
+              SeaNova AI Creative Studio helps businesses and creators turn ideas into
+              high-quality websites, thumbnails, videos, and advertising creatives.
+            </p>
+            <div className="mt-8 flex flex-wrap gap-4">
+              <PrimaryButton onClick={() => onContactClick("project")}>Start a Project</PrimaryButton>
+              <a href="#work">
+                <SecondaryButton>View Our Work</SecondaryButton>
+              </a>
+            </div>
+          </div>
+        </Reveal>
+
+        <Reveal>
+          <div className="grid grid-cols-2 gap-4">
+            <div className="col-span-2">
+              <WebsiteMockup />
+            </div>
+            <div>
+              <ThumbnailMockup />
+            </div>
+            <div>
+              <VideoMockup />
+            </div>
+          </div>
+        </Reveal>
+      </div>
+    </section>
+  );
+}
+
+function TrustSection() {
+  const points = [
+    "Strong visual design",
+    "Clear communication",
+    "Fast creative production",
+    "Modern AI-assisted workflows",
+    "Content designed for real-world results",
+  ];
+  return (
+    <section className="py-20 px-5 sm:px-8 border-t" style={{ borderColor: COLORS.border }}>
+      <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-10 items-start">
+        <Reveal>
+          <h2
+            className="text-2xl sm:text-3xl leading-snug"
+            style={{ fontFamily: "Fraunces, serif", color: COLORS.text }}
+          >
+            Creative work shouldn't just look good.
+            <br />
+            It should get attention.
+          </h2>
+        </Reveal>
+        <Reveal>
+          <ul className="space-y-3">
+            {points.map((p) => (
+              <li
+                key={p}
+                className="flex items-start gap-3 text-sm sm:text-base"
+                style={{ color: COLORS.muted, fontFamily: "Inter, sans-serif" }}
+              >
+                <span
+                  className="mt-2 w-1.5 h-1.5 rounded-full flex-shrink-0"
+                  style={{ background: COLORS.accent }}
+                />
+                {p}
+              </li>
+            ))}
+          </ul>
+        </Reveal>
+      </div>
+    </section>
+  );
+}
+
+function Services({ onContactClick }) {
+  return (
+    <section id="services" className="py-24 px-5 sm:px-8 border-t" style={{ borderColor: COLORS.border }}>
+      <div className="max-w-6xl mx-auto">
+        <Reveal>
+          <h2
+            className="text-3xl sm:text-4xl mb-14"
+            style={{ fontFamily: "Fraunces, serif", color: COLORS.text }}
+          >
+            What We Create
+          </h2>
+        </Reveal>
+
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+          {SERVICES.map((service) => {
+            const Icon = service.icon;
+            const pricing = getPricing(service.title);
+            return (
+              <Reveal key={service.title}>
+                <div
+                  className="relative h-full p-6 rounded-md border flex flex-col transition-colors duration-200"
+                  style={{ borderColor: COLORS.border, background: COLORS.surface }}
+                >
+                  {service.badge && (
+                    <span
+                      className="absolute top-4 right-4 text-xs px-2.5 py-1 rounded-full border"
+                      style={{
+                        color: COLORS.offer,
+                        borderColor: COLORS.offer,
+                        background: COLORS.offerDim,
+                        fontFamily: "Inter, sans-serif",
+                      }}
+                    >
+                      {service.badge}
+                    </span>
+                  )}
+                  <Icon size={22} style={{ color: COLORS.accent }} />
+                  <h3
+                    className="mt-5 text-lg"
+                    style={{ fontFamily: "Fraunces, serif", color: COLORS.text }}
+                  >
+                    {service.title}
+                  </h3>
+                  <p
+                    className="mt-3 text-sm leading-relaxed"
+                    style={{ color: COLORS.muted, fontFamily: "Inter, sans-serif" }}
+                  >
+                    {service.description}
+                  </p>
+                  {pricing && (
+                    <div className="mt-4 flex items-baseline gap-2">
+                      {pricing.originalPrice && (
+                        <span
+                          className="text-sm line-through"
+                          style={{ color: COLORS.mutedDim, fontFamily: "Inter, sans-serif" }}
+                        >
+                          ₹{pricing.originalPrice.toLocaleString("en-IN")}
+                        </span>
+                      )}
+                      <span
+                        className="text-lg"
+                        style={{ fontFamily: "Fraunces, serif", color: COLORS.text }}
+                      >
+                        {pricing.price ? `₹${pricing.price.toLocaleString("en-IN")}` : "Custom quote"}
+                      </span>
+                    </div>
+                  )}
+                  {pricing && (pricing.delivery || pricing.revisions) && (
+                    <div className="mt-4 flex flex-col gap-1">
+                      {pricing.delivery && (
+                        <span className="text-xs" style={{ color: COLORS.mutedDim, fontFamily: "Inter, sans-serif" }}>
+                          ⏱ {pricing.delivery}
+                        </span>
+                      )}
+                      {pricing.revisions && (
+                        <span className="text-xs" style={{ color: COLORS.mutedDim, fontFamily: "Inter, sans-serif" }}>
+                          ✓ {pricing.revisions}
+                        </span>
+                      )}
+                    </div>
+                  )}
+                  <div className="mt-4 flex flex-wrap gap-2">
+                    {service.items.map((item) => (
+                      <span
+                        key={item}
+                        className="text-xs px-2 py-1 rounded"
+                        style={{
+                          color: COLORS.mutedDim,
+                          background: COLORS.surfaceAlt,
+                          fontFamily: "Inter, sans-serif",
+                        }}
+                      >
+                        {item}
+                      </span>
+                    ))}
+                  </div>
+                  <button
+                    onClick={() => onContactClick("project")}
+                    className="mt-6 text-left"
+                    style={{ background: "transparent", border: "none", padding: 0, cursor: "pointer" }}
+                  >
+                    <span
+                      className="inline-flex items-center gap-1.5 text-sm font-medium"
+                      style={{ color: COLORS.accent, fontFamily: "Inter, sans-serif" }}
+                    >
+                      {service.cta}
+                      <ArrowUpRight size={14} />
+                    </span>
+                  </button>
+                </div>
+              </Reveal>
+            );
+          })}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* --------------------------- ongoing / retainer work ----------------------- */
+
+function OngoingWork({ onContactClick }) {
+  const points = [
+    "Weekly or monthly thumbnail sets",
+    "Regular video edits on a set schedule",
+    "One consistent style across all your content",
+    "Flexible plans based on how much you need",
+  ];
+
+  return (
+    <section id="ongoing-work" className="py-24 px-5 sm:px-8 border-t" style={{ borderColor: COLORS.border }}>
+      <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-14 items-center">
+        <Reveal>
+          <div>
+            <Eyebrow>Beyond One-Off Projects</Eyebrow>
+            <h2
+              className="mt-4 text-3xl sm:text-4xl"
+              style={{ fontFamily: "Fraunces, serif", color: COLORS.text }}
+            >
+              Looking for a Long-Term Editor?
+            </h2>
+            <p
+              className="mt-4 text-base leading-relaxed max-w-md"
+              style={{ color: COLORS.muted, fontFamily: "Inter, sans-serif" }}
+            >
+              SeaNova can also work as your ongoing thumbnail or video editor —
+              a consistent creative partner for your channel or brand, not
+              just a single project.
+            </p>
+            <ul className="mt-6 space-y-3">
+              {points.map((p) => (
+                <li
+                  key={p}
+                  className="flex items-start gap-3 text-sm sm:text-base"
+                  style={{ color: COLORS.muted, fontFamily: "Inter, sans-serif" }}
+                >
+                  <span
+                    className="mt-2 w-1.5 h-1.5 rounded-full flex-shrink-0"
+                    style={{ background: COLORS.accent }}
+                  />
+                  {p}
+                </li>
+              ))}
+            </ul>
+            <PrimaryButton className="mt-8" onClick={() => onContactClick("ongoing")}>
+              Let's Talk Long-Term
+            </PrimaryButton>
+          </div>
+        </Reveal>
+
+        <Reveal>
+          <div
+            className="p-8 sm:p-10 rounded-md border"
+            style={{ borderColor: COLORS.border, background: COLORS.surface }}
+          >
+            <p
+              className="text-lg sm:text-xl leading-snug"
+              style={{ fontFamily: "Fraunces, serif", color: COLORS.text }}
+            >
+              Some creators need one project done well.
+            </p>
+            <p
+              className="mt-3 text-lg sm:text-xl leading-snug"
+              style={{ fontFamily: "Fraunces, serif", color: COLORS.accent }}
+            >
+              Others need someone who's always in their corner.
+            </p>
+            <p
+              className="mt-6 text-sm leading-relaxed"
+              style={{ color: COLORS.mutedDim, fontFamily: "Inter, sans-serif" }}
+            >
+              If you're publishing regularly and need reliable thumbnails or
+              edits every week without having to explain your style from
+              scratch each time — that's exactly the kind of ongoing work
+              SeaNova is set up for.
+            </p>
+          </div>
+        </Reveal>
+      </div>
+    </section>
+  );
+}
+
+function categoryIcon(category) {
+  switch (category) {
+    case "Websites":
+      return Layout;
+    case "Thumbnails":
+      return ImageIcon;
+    case "Video":
+      return Film;
+    default:
+      return Layout;
+  }
+}
+
+function ProjectCard({ project }) {
+  const Icon = categoryIcon(project.category);
+  const hasLink = Boolean(project.url);
+
+  const card = (
+    <div
+      className="rounded-md border overflow-hidden group cursor-default h-full"
+      style={{
+        borderColor: hasLink ? COLORS.borderStrong : COLORS.border,
+        background: COLORS.surface,
+      }}
+    >
+      <div
+        className="aspect-video flex items-center justify-center transition-transform duration-300 group-hover:scale-[1.03]"
+        style={{ background: COLORS.surfaceAlt }}
+      >
+        <Icon size={26} style={{ color: COLORS.accent, opacity: 0.7 }} />
+      </div>
+      <div className="p-4">
+        <span
+          className="text-xs"
+          style={{ color: COLORS.mutedDim, fontFamily: "Inter, sans-serif" }}
+        >
+          {project.category}
+        </span>
+        <h3
+          className="mt-1 text-sm font-medium"
+          style={{ color: COLORS.text, fontFamily: "Inter, sans-serif" }}
+        >
+          {project.name}
+        </h3>
+        {hasLink ? (
+          <span
+            className="mt-2 inline-flex items-center gap-1 text-xs font-medium"
+            style={{ color: COLORS.accent, fontFamily: "Inter, sans-serif" }}
+          >
+            {project.label || "View project"}
+            <ArrowUpRight size={12} />
+          </span>
+        ) : (
+          <p
+            className="mt-1 text-xs"
+            style={{ color: COLORS.mutedDim, fontFamily: "Inter, sans-serif" }}
+          >
+            Add your project link here.
+          </p>
+        )}
+      </div>
+    </div>
+  );
+
+  return hasLink ? (
+    <a
+      href={project.url}
+      target="_blank"
+      rel="noreferrer"
+      className="block h-full transition-transform duration-200 hover:-translate-y-0.5"
+    >
+      {card}
+    </a>
+  ) : (
+    card
+  );
+}
+
+function Portfolio() {
+  const [active, setActive] = useState("All");
+  const filtered =
+    active === "All" ? PROJECTS : PROJECTS.filter((p) => p.category === active);
+
+  return (
+    <section id="work" className="py-24 px-5 sm:px-8 border-t" style={{ borderColor: COLORS.border }}>
+      <div className="max-w-6xl mx-auto">
+        <Reveal>
+          <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6 mb-10">
+            <h2
+              className="text-3xl sm:text-4xl"
+              style={{ fontFamily: "Fraunces, serif", color: COLORS.text }}
+            >
+              Selected Work
+            </h2>
+            <div className="flex flex-wrap gap-2">
+              {CATEGORIES.map((cat) => (
+                <button
+                  key={cat}
+                  onClick={() => setActive(cat)}
+                  className="text-sm px-4 py-2 rounded-full border transition-colors duration-150"
+                  style={{
+                    borderColor: active === cat ? COLORS.accent : COLORS.border,
+                    color: active === cat ? COLORS.accent : COLORS.muted,
+                    fontFamily: "Inter, sans-serif",
+                  }}
+                >
+                  {cat}
+                </button>
+              ))}
+            </div>
+          </div>
+        </Reveal>
+
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+          {filtered.map((project) => (
+            <Reveal key={project.name}>
+              <ProjectCard project={project} />
+            </Reveal>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* --------------------------------- reviews --------------------------------- */
+/* Shows only real reviews from the REVIEWS list above — no fake stars, no
+   fake names. The submission form is a visual prototype, same as the
+   contact form: it doesn't publish straight to the page (that would let
+   anyone post anything with no moderation), it just confirms receipt.
+   Wire it to your real backend, then paste approved reviews into REVIEWS. */
+
+function StarRow({ rating, size = 16 }) {
+  return (
+    <div className="flex gap-0.5">
+      {[1, 2, 3, 4, 5].map((n) => (
+        <Star key={n} size={size} filled={n <= rating} style={{ color: COLORS.accent }} />
+      ))}
+    </div>
+  );
+}
+
+function ReviewCard({ review }) {
+  return (
+    <div
+      className="h-full p-6 rounded-md border flex flex-col"
+      style={{ borderColor: COLORS.border, background: COLORS.surface }}
+    >
+      <StarRow rating={review.rating} />
+      <p
+        className="mt-4 text-sm leading-relaxed"
+        style={{ color: COLORS.muted, fontFamily: "Inter, sans-serif" }}
+      >
+        "{review.text}"
+      </p>
+      <div className="mt-5 flex items-center justify-between">
+        <span
+          className="text-sm font-medium"
+          style={{ color: COLORS.text, fontFamily: "Inter, sans-serif" }}
+        >
+          {review.name}
+        </span>
+        {review.service && (
+          <span
+            className="text-xs px-2 py-1 rounded"
+            style={{ color: COLORS.mutedDim, background: COLORS.surfaceAlt, fontFamily: "Inter, sans-serif" }}
+          >
+            {review.service}
+          </span>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function ReviewsSection() {
+  const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState("");
+  const [form, setForm] = useState({ name: "", service: "Website", rating: 5, text: "", website: "" });
+  const [liveReviews, setLiveReviews] = useState(null);
+  const [reviewsLoading, setReviewsLoading] = useState(!!supabaseClient);
+  const [reviewsError, setReviewsError] = useState(false);
+
+  useEffect(() => {
+    if (!supabaseClient) return;
+    setReviewsLoading(true);
+    supabaseClient
+      .from("reviews")
+      .select("*")
+      .eq("approved", true)
+      .order("created_at", { ascending: false })
+      .then(({ data, error }) => {
+        if (error) {
+          setReviewsError(true);
+          setLiveReviews(REVIEWS);
+        } else {
+          setLiveReviews(
+            (data || []).map((r) => ({
+              name: r.name,
+              service: r.service,
+              rating: r.rating,
+              text: r.review_text,
+            }))
+          );
+        }
+        setReviewsLoading(false);
+      });
+  }, []);
+
+  const displayReviews = supabaseClient ? (liveReviews ?? []) : REVIEWS;
+
+  function update(field, value) {
+    setForm((f) => ({ ...f, [field]: value }));
+  }
+
+  async function handleSubmit(e) {
+    e.preventDefault();
+    setSubmitError("");
+
+    // Honeypot: real visitors never see or fill this field. If it's filled,
+    // it's a bot — pretend success without touching the database.
+    if (form.website) {
+      setSubmitted(true);
+      return;
+    }
+
+    if (supabaseClient) {
+      setSubmitting(true);
+      const { error } = await supabaseClient.from("reviews").insert([
+        {
+          name: form.name,
+          service: form.service,
+          rating: form.rating,
+          review_text: form.text,
+        },
+      ]);
+      setSubmitting(false);
+      if (error) {
+        setSubmitError("Something went wrong submitting your review. Please try again.");
+        return;
+      }
+    }
+
+    setSubmitted(true);
+  }
+
+  const inputStyle = {
+    background: COLORS.surfaceAlt,
+    borderColor: COLORS.border,
+    color: COLORS.text,
+    fontFamily: "Inter, sans-serif",
+  };
+  const labelClass = "text-xs mb-1.5 block";
+
+  return (
+    <section id="reviews" className="py-24 px-5 sm:px-8 border-t" style={{ borderColor: COLORS.border }}>
+      <div className="max-w-6xl mx-auto">
+        <Reveal>
+          <h2
+            className="text-3xl sm:text-4xl mb-4"
+            style={{ fontFamily: "Fraunces, serif", color: COLORS.text }}
+          >
+            What Customers Say
+          </h2>
+          <p
+            className="max-w-md mb-12 text-base leading-relaxed"
+            style={{ color: COLORS.muted, fontFamily: "Inter, sans-serif" }}
+          >
+            Real feedback from real projects — nothing here is invented.
+          </p>
+        </Reveal>
+
+        {reviewsLoading ? (
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 mb-14">
+            {[1, 2, 3].map((i) => (
+              <div
+                key={i}
+                className="p-6 rounded-md border"
+                style={{ borderColor: COLORS.border, background: COLORS.surface }}
+              >
+                <div className="flex gap-1 mb-4">
+                  {[1,2,3,4,5].map((s) => (
+                    <div key={s} className="w-4 h-4 rounded" style={{ background: COLORS.surfaceAlt }} />
+                  ))}
+                </div>
+                <div className="h-3 rounded mb-2" style={{ background: COLORS.surfaceAlt, width: "90%" }} />
+                <div className="h-3 rounded mb-2" style={{ background: COLORS.surfaceAlt, width: "75%" }} />
+                <div className="h-3 rounded mb-6" style={{ background: COLORS.surfaceAlt, width: "60%" }} />
+                <div className="h-3 rounded" style={{ background: COLORS.surfaceAlt, width: "40%" }} />
+              </div>
+            ))}
+          </div>
+        ) : displayReviews.length > 0 ? (
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 mb-14">
+            {displayReviews.map((review, i) => (
+              <Reveal key={i}>
+                <ReviewCard review={review} />
+              </Reveal>
+            ))}
+          </div>
+        ) : (
+          <Reveal>
+            <div
+              className="p-8 rounded-md border text-sm leading-relaxed mb-14"
+              style={{ borderColor: COLORS.border, background: COLORS.surface, color: COLORS.mutedDim, fontFamily: "Inter, sans-serif" }}
+            >
+              No reviews yet — this space fills up as real customers share their
+              experience. Be the first.
+            </div>
+          </Reveal>
+        )}
+
+        <Reveal>
+          <div
+            className="max-w-xl p-6 sm:p-8 rounded-md border"
+            style={{ borderColor: COLORS.border, background: COLORS.surface }}
+          >
+            <h3
+              className="text-lg mb-5"
+              style={{ fontFamily: "Fraunces, serif", color: COLORS.text }}
+            >
+              Leave a Review
+            </h3>
+
+            {submitted ? (
+              <div>
+                <p
+                  className="text-sm leading-relaxed"
+                  style={{ color: COLORS.muted, fontFamily: "Inter, sans-serif" }}
+                >
+                  {"Thanks for the feedback! Your review has been submitted and will appear here once approved."}
+                </p>
+                <button
+                  onClick={() => {
+                    setSubmitted(false);
+                    setForm({ name: "", service: "Website", rating: 5, text: "" });
+                  }}
+                  className="mt-4 text-sm"
+                  style={{ color: COLORS.accent, fontFamily: "Inter, sans-serif" }}
+                >
+                  Leave another
+                </button>
+              </div>
+            ) : (
+              <form onSubmit={handleSubmit} className="grid gap-4">
+                <input
+                  type="text"
+                  name="website"
+                  value={form.website}
+                  onChange={(e) => update("website", e.target.value)}
+                  tabIndex="-1"
+                  autoComplete="off"
+                  aria-hidden="true"
+                  style={{ position: "absolute", left: "-9999px", width: "1px", height: "1px", opacity: 0 }}
+                />
+                <div>
+                  <label className={labelClass} style={{ color: COLORS.mutedDim }}>
+                    Name
+                  </label>
+                  <input
+                    required
+                    value={form.name}
+                    onChange={(e) => update("name", e.target.value)}
+                    className="w-full px-3 py-2.5 rounded border text-sm outline-none"
+                    style={inputStyle}
+                  />
+                </div>
+                <div>
+                  <label className={labelClass} style={{ color: COLORS.mutedDim }}>
+                    Service
+                  </label>
+                  <select
+                    value={form.service}
+                    onChange={(e) => update("service", e.target.value)}
+                    className="w-full px-3 py-2.5 rounded border text-sm outline-none"
+                    style={inputStyle}
+                  >
+                    {["Website", "Thumbnail", "Video Editing", "Other"].map((opt) => (
+                      <option key={opt} value={opt} style={{ background: COLORS.surface }}>
+                        {opt}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div>
+                  <label className={labelClass} style={{ color: COLORS.mutedDim }}>
+                    Rating
+                  </label>
+                  <div className="flex gap-1.5">
+                    {[1, 2, 3, 4, 5].map((n) => (
+                      <button
+                        key={n}
+                        type="button"
+                        onClick={() => update("rating", n)}
+                        aria-label={`${n} star`}
+                        className="p-0.5"
+                      >
+                        <Star size={22} filled={n <= form.rating} style={{ color: COLORS.accent }} />
+                      </button>
+                    ))}
+                  </div>
+                </div>
+                <div>
+                  <label className={labelClass} style={{ color: COLORS.mutedDim }}>
+                    Your Review
+                  </label>
+                  <textarea
+                    required
+                    rows={4}
+                    value={form.text}
+                    onChange={(e) => update("text", e.target.value)}
+                    className="w-full px-3 py-2.5 rounded border text-sm outline-none resize-none"
+                    style={inputStyle}
+                  />
+                </div>
+                {submitError && (
+                  <p className="text-xs" style={{ color: COLORS.offer, fontFamily: "Inter, sans-serif" }}>
+                    {submitError}
+                  </p>
+                )}
+                <PrimaryButton className="w-full justify-center" disabled={submitting}>
+                  {submitting ? "Submitting..." : "Submit Review"}
+                </PrimaryButton>
+              </form>
+            )}
+          </div>
+        </Reveal>
+      </div>
+    </section>
+  );
+}
+
+function WhySeaNova() {
+  return (
+    <section id="about" className="py-24 px-5 sm:px-8 border-t" style={{ borderColor: COLORS.border }}>
+      <div className="max-w-6xl mx-auto">
+        <Reveal>
+          <h2
+            className="text-3xl sm:text-4xl mb-14"
+            style={{ fontFamily: "Fraunces, serif", color: COLORS.text }}
+          >
+            Why SeaNova?
+          </h2>
+        </Reveal>
+        <div className="grid sm:grid-cols-2 gap-x-10 gap-y-10">
+          {WHY.map((point) => (
+            <Reveal key={point.title}>
+              <div className="border-t pt-5" style={{ borderColor: COLORS.border }}>
+                <h3
+                  className="text-lg"
+                  style={{ fontFamily: "Fraunces, serif", color: COLORS.text }}
+                >
+                  {point.title}
+                </h3>
+                <p
+                  className="mt-2 text-sm leading-relaxed"
+                  style={{ color: COLORS.muted, fontFamily: "Inter, sans-serif" }}
+                >
+                  {point.description}
+                </p>
+              </div>
+            </Reveal>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function Process() {
+  return (
+    <section id="process" className="py-24 px-5 sm:px-8 border-t" style={{ borderColor: COLORS.border }}>
+      <div className="max-w-6xl mx-auto">
+        <Reveal>
+          <h2
+            className="text-3xl sm:text-4xl mb-14"
+            style={{ fontFamily: "Fraunces, serif", color: COLORS.text }}
+          >
+            How It Works
+          </h2>
+        </Reveal>
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
+          {PROCESS.map((step) => (
+            <Reveal key={step.n}>
+              <div>
+                <span
+                  className="text-sm"
+                  style={{ color: COLORS.accent, fontFamily: "Inter, sans-serif" }}
+                >
+                  {step.n}
+                </span>
+                <h3
+                  className="mt-3 text-lg"
+                  style={{ fontFamily: "Fraunces, serif", color: COLORS.text }}
+                >
+                  {step.title}
+                </h3>
+                <p
+                  className="mt-2 text-sm leading-relaxed"
+                  style={{ color: COLORS.muted, fontFamily: "Inter, sans-serif" }}
+                >
+                  {step.description}
+                </p>
+              </div>
+            </Reveal>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ------------------------------ simple fair terms -------------------------- */
+
+const TERMS = [
+  {
+    title: "Clear Revisions",
+    description:
+      "Every project includes 2 free revisions so we get it right together. Extra revisions can be added if needed.",
+  },
+  {
+    title: "Fair Refund Policy",
+    description:
+      "If you're not happy with the first draft, I'll revise it. If we still can't make it work, 50% of your payment is refunded.",
+  },
+  {
+    title: "You Approve Before Final",
+    description:
+      "Nothing is finalised until you've reviewed it and confirmed you're happy.",
+  },
+  {
+    title: "Direct Communication",
+    description:
+      "You talk to the person doing the work — no account managers, no delays.",
+  },
+];
+
+function SimpleTerms() {
+  return (
+    <section id="terms" className="py-24 px-5 sm:px-8 border-t" style={{ borderColor: COLORS.border }}>
+      <div className="max-w-6xl mx-auto">
+        <Reveal>
+          <h2
+            className="text-3xl sm:text-4xl mb-14"
+            style={{ fontFamily: "Fraunces, serif", color: COLORS.text }}
+          >
+            Simple, Fair Terms
+          </h2>
+        </Reveal>
+        <div className="grid sm:grid-cols-2 gap-x-10 gap-y-10">
+          {TERMS.map((term) => (
+            <Reveal key={term.title}>
+              <div className="border-t pt-5" style={{ borderColor: COLORS.border }}>
+                <h3
+                  className="text-lg"
+                  style={{ fontFamily: "Fraunces, serif", color: COLORS.text }}
+                >
+                  {term.title}
+                </h3>
+                <p
+                  className="mt-2 text-sm leading-relaxed"
+                  style={{ color: COLORS.muted, fontFamily: "Inter, sans-serif" }}
+                >
+                  {term.description}
+                </p>
+              </div>
+            </Reveal>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ------------------------------ payment section --------------------------- */
+/* Modular "Pay for Your Project" block. FamPay / UPI only — no card networks,
+   no other gateways. This does not talk to a real payment API: clicking
+   "Proceed to Payment" opens the placeholder checkout slot below, it does not
+   fabricate a success result. Wire your real FamPay/UPI integration into
+   handleProceed (and call setStatus("success") / setStatus("failed") from
+   your gateway's callback) to make this live. */
+
+const FAMPAY_UPI_ID = "9903447708@fam";
+
+function StatusBadge({ status }) {
+  const config = {
+    idle: { label: "Not started", color: COLORS.mutedDim, Icon: Clock },
+    pending: { label: "Pending", color: COLORS.muted, Icon: Clock },
+    success: { label: "Payment Successful", color: COLORS.accent, Icon: CheckCircle2 },
+    failed: { label: "Payment Failed", color: "#E8735A", Icon: XCircle },
+  }[status];
+
+  const { label, color, Icon } = config;
+
+  return (
+    <span
+      className="inline-flex items-center gap-1.5 text-xs px-2.5 py-1 rounded-full border"
+      style={{ color, borderColor: COLORS.border, fontFamily: "Inter, sans-serif" }}
+    >
+      <Icon size={12} />
+      {label}
+    </span>
+  );
+}
+
+function SeaNovaPayment() {
+  const [service, setService] = useState(SERVICE_PRICING[0].name);
+  const [status, setStatus] = useState("idle"); // "idle" | "pending" | "success" | "failed"
+
+  const selected = SERVICE_PRICING.find((s) => s.name === service);
+  const amountLabel = selected && selected.price ? `₹${selected.price.toLocaleString("en-IN")}` : "Custom quote";
+
+  const [copied, setCopied] = useState(false);
+
+  // Standard UPI deep link. On a phone it opens the customer's UPI app
+  // (FamPay, GPay, PhonePe...) with the receiver ID and amount pre-filled.
+  const upiLink =
+    selected && selected.price
+      ? `upi://pay?pa=${encodeURIComponent(FAMPAY_UPI_ID)}&pn=${encodeURIComponent(
+          "SeaNova"
+        )}&am=${selected.price}&cu=INR&tn=${encodeURIComponent("SeaNova - " + selected.name)}`
+      : null;
+
+  function handleProceed() {
+    // The website cannot see whether a UPI payment actually went through, so
+    // this never sets "success" or "failed" by itself. Payment is confirmed
+    // manually by SeaNova after the customer sends their payment proof.
+    setStatus("pending");
+    if (upiLink) window.location.href = upiLink;
+  }
+
+  function copyUpiId() {
+    try {
+      navigator.clipboard.writeText(FAMPAY_UPI_ID).then(() => {
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+      });
+    } catch (e) {
+      /* clipboard not available — the ID is still shown on screen */
+    }
+  }
+
+  return (
+    <section id="payment" className="py-24 px-5 sm:px-8 border-t" style={{ borderColor: COLORS.border }}>
+      <div className="max-w-6xl mx-auto grid lg:grid-cols-2 gap-14">
+        <Reveal>
+          <div>
+            <h2
+              className="text-3xl sm:text-4xl"
+              style={{ fontFamily: "Fraunces, serif", color: COLORS.text }}
+            >
+              Pay for Your Project
+            </h2>
+            <p
+              className="mt-4 text-base max-w-sm leading-relaxed"
+              style={{ color: COLORS.muted, fontFamily: "Inter, sans-serif" }}
+            >
+              Select your service, confirm the amount, and pay securely via
+              FamPay.
+            </p>
+            <div
+              className="mt-6 inline-flex items-center gap-2 text-sm"
+              style={{ color: COLORS.mutedDim, fontFamily: "Inter, sans-serif" }}
+            >
+              <ShieldCheck size={16} style={{ color: COLORS.accent }} />
+              FamPay / UPI only — no cards, no third-party checkout.
+            </div>
+          </div>
+        </Reveal>
+
+        <Reveal>
+          <div
+            className="p-6 sm:p-8 rounded-md border"
+            style={{ borderColor: COLORS.border, background: COLORS.surface }}
+          >
+            <label
+              className="text-xs mb-1.5 block"
+              style={{ color: COLORS.mutedDim, fontFamily: "Inter, sans-serif" }}
+            >
+              Service
+            </label>
+            <select
+              value={service}
+              onChange={(e) => {
+                setService(e.target.value);
+                setStatus("idle");
+              }}
+              className="w-full px-3 py-2.5 rounded border text-sm outline-none"
+              style={{
+                background: COLORS.surfaceAlt,
+                borderColor: COLORS.border,
+                color: COLORS.text,
+                fontFamily: "Inter, sans-serif",
+              }}
+            >
+              {SERVICE_PRICING.map((s) => (
+                <option key={s.name} value={s.name} style={{ background: COLORS.surface }}>
+                  {s.name}
+                </option>
+              ))}
+            </select>
+
+            <div
+              className="mt-5 px-4 py-4 rounded"
+              style={{ background: COLORS.surfaceAlt }}
+            >
+              <div className="flex items-center justify-between">
+                <span
+                  className="text-sm"
+                  style={{ color: COLORS.muted, fontFamily: "Inter, sans-serif" }}
+                >
+                  Amount
+                </span>
+                <div className="flex items-baseline gap-2">
+                  {selected && selected.originalPrice && (
+                    <span
+                      className="text-sm line-through"
+                      style={{ color: COLORS.mutedDim, fontFamily: "Inter, sans-serif" }}
+                    >
+                      ₹{selected.originalPrice.toLocaleString("en-IN")}
+                    </span>
+                  )}
+                  <span
+                    className="text-xl"
+                    style={{ fontFamily: "Fraunces, serif", color: COLORS.text }}
+                  >
+                    {amountLabel}
+                  </span>
+                </div>
+              </div>
+              {selected && selected.originalPrice && (
+                <div className="mt-3 flex items-center justify-between gap-3 flex-wrap">
+                  <span
+                    className="text-xs px-2.5 py-1 rounded-full border"
+                    style={{
+                      color: COLORS.offer,
+                      borderColor: COLORS.offer,
+                      background: COLORS.offerDim,
+                      fontFamily: "Inter, sans-serif",
+                    }}
+                  >
+                    You save ₹{(selected.originalPrice - selected.price).toLocaleString("en-IN")}
+                  </span>
+                  <span
+                    className="text-xs"
+                    style={{ color: COLORS.mutedDim, fontFamily: "Inter, sans-serif" }}
+                  >
+                    {selected.note}
+                  </span>
+                </div>
+              )}
+              {selected && selected.domainNote && (
+                <div
+                  className="mt-3 px-3 py-2.5 rounded border text-xs leading-relaxed"
+                  style={{
+                    borderColor: COLORS.offer,
+                    background: COLORS.offerDim,
+                    color: COLORS.offer,
+                    fontFamily: "Inter, sans-serif",
+                  }}
+                >
+                  ⚡ {selected.domainNote}
+                </div>
+              )}
+            </div>
+
+            {status === "idle" && (
+              <button
+                onClick={handleProceed}
+                className="mt-5 w-full inline-flex items-center justify-center gap-2 px-6 py-3 text-sm font-medium rounded-sm"
+                style={{ background: COLORS.accent, color: "#062420", fontFamily: "Inter, sans-serif" }}
+              >
+                <Smartphone size={16} />
+                Proceed to Payment
+              </button>
+            )}
+
+            {status === "pending" && (
+              <div
+                className="mt-5 p-4 rounded border text-sm leading-relaxed"
+                style={{
+                  borderColor: COLORS.border,
+                  background: COLORS.surfaceAlt,
+                  color: COLORS.muted,
+                  fontFamily: "Inter, sans-serif",
+                }}
+              >
+                <p style={{ color: COLORS.text }}>Pay via FamPay / UPI</p>
+                <p className="mt-2" style={{ color: COLORS.mutedDim }}>
+                  Your UPI app should open with the amount filled in. If it
+                  didn't, pay {amountLabel} to this UPI ID from any UPI app:
+                </p>
+                <div
+                  className="mt-3 flex items-center justify-between gap-3 px-3 py-2.5 rounded border"
+                  style={{ borderColor: COLORS.border, background: COLORS.surface }}
+                >
+                  <span style={{ color: COLORS.text }}>{FAMPAY_UPI_ID}</span>
+                  <button
+                    type="button"
+                    onClick={copyUpiId}
+                    className="text-xs"
+                    style={{ color: COLORS.accent, fontFamily: "Inter, sans-serif" }}
+                  >
+                    {copied ? "Copied" : "Copy"}
+                  </button>
+                </div>
+                <p className="mt-3 text-xs" style={{ color: COLORS.mutedDim }}>
+                  After paying, send your payment screenshot and the service you
+                  paid for to sean.designs77@gmail.com or on Instagram. We
+                  confirm payments manually — this page can't detect them
+                  automatically.
+                </p>
+              </div>
+            )}
+
+            {status === "success" && (
+              <div
+                className="mt-5 p-4 rounded border text-sm leading-relaxed"
+                style={{ borderColor: COLORS.border, background: COLORS.surfaceAlt, color: COLORS.text, fontFamily: "Inter, sans-serif" }}
+              >
+                Payment received. Thank you! Your project details have been
+                submitted to SeaNova.
+              </div>
+            )}
+
+            {status === "failed" && (
+              <div
+                className="mt-5 p-4 rounded border text-sm leading-relaxed"
+                style={{ borderColor: COLORS.border, background: COLORS.surfaceAlt, color: COLORS.muted, fontFamily: "Inter, sans-serif" }}
+              >
+                The payment didn't go through. No charge was made — please try
+                again or contact us for help.
+              </div>
+            )}
+
+            <div className="mt-5 flex items-center justify-between">
+              <span
+                className="text-xs"
+                style={{ color: COLORS.mutedDim, fontFamily: "Inter, sans-serif" }}
+              >
+                Payment Status
+              </span>
+              <StatusBadge status={status} />
+            </div>
+          </div>
+        </Reveal>
+      </div>
+    </section>
+  );
+}
+
+function ContactSection({ mode = "project" }) {
+  const isOngoing = mode === "ongoing";
+  const tableName = isOngoing ? "ongoing_inquiries" : "project_inquiries";
+
+  const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState("");
+  const [form, setForm] = useState({
+    name: "",
+    email: "",
+    brand: "",
+    service: "Website",
+    project: "",
+    budget: "",
+    timeline: "",
+    volume: "1–4 per month",
+    channel: "",
+    website: "",
+  });
+
+  // Reset the "thanks" screen whenever the mode changes, so switching between
+  // "Start a Project" and "Let's Talk Long-Term" always shows a fresh form.
+  // Also swap the service default, since each mode has its own option list.
+  useEffect(() => {
+    setSubmitted(false);
+    setForm((f) => ({ ...f, service: isOngoing ? "Thumbnails" : "Website" }));
+  }, [mode]);
+
+  function update(field, value) {
+    setForm((f) => ({ ...f, [field]: value }));
+  }
+
+  async function handleSubmit(e) {
+    e.preventDefault();
+    setSubmitError("");
+
+    // Honeypot: real visitors never see or fill this field. If it's filled,
+    // it's a bot — pretend success without touching the database.
+    if (form.website) {
+      setSubmitted(true);
+      return;
+    }
+
+    if (supabaseClient) {
+      setSubmitting(true);
+      const payload = {
+        name: form.name,
+        email: form.email,
+        brand: form.brand,
+        service: form.service,
+        project: form.project,
+        budget: form.budget,
+        timeline: form.timeline,
+      };
+      if (isOngoing) {
+        payload.volume = form.volume;
+        payload.channel = form.channel;
+      }
+      const { error } = await supabaseClient.from(tableName).insert([payload]);
+      setSubmitting(false);
+      if (error) {
+        setSubmitError("Something went wrong sending this. Please try again.");
+        return;
+      }
+    }
+
+    setSubmitted(true);
+  }
+
+  const inputStyle = {
+    background: COLORS.surfaceAlt,
+    borderColor: COLORS.border,
+    color: COLORS.text,
+    fontFamily: "Inter, sans-serif",
+  };
+
+  const labelClass = "text-xs mb-1.5 block";
+
+  return (
+    <section id="contact" className="py-24 px-5 sm:px-8 border-t" style={{ borderColor: COLORS.border }}>
+      <div className="max-w-6xl mx-auto grid lg:grid-cols-2 gap-14">
+        <Reveal>
+          <div>
+            <h2
+              className="text-3xl sm:text-4xl"
+              style={{ fontFamily: "Fraunces, serif", color: COLORS.text }}
+            >
+              {isOngoing ? "Let's Talk Long-Term." : "Let's Build Something."}
+            </h2>
+            <p
+              className="mt-4 text-base max-w-sm leading-relaxed"
+              style={{ color: COLORS.muted, fontFamily: "Inter, sans-serif" }}
+            >
+              {isOngoing
+                ? "Tell us about your channel or brand — we'll figure out an ongoing plan together."
+                : "Have an idea? Tell us what you're working on."}
+            </p>
+
+            <div className="mt-10 flex flex-col gap-3">
+              <a
+                href="mailto:sean.designs77@gmail.com"
+                className="inline-flex items-center gap-2 text-sm"
+                style={{ color: COLORS.muted, fontFamily: "Inter, sans-serif" }}
+              >
+                <Mail size={16} style={{ color: COLORS.accent }} />
+                sean.designs77@gmail.com
+              </a>
+              <a
+                href="https://instagram.com/sea.ntherizzler677"
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center gap-2 text-sm"
+                style={{ color: COLORS.muted, fontFamily: "Inter, sans-serif" }}
+              >
+                <Instagram size={16} style={{ color: COLORS.accent }} />
+                @sea.ntherizzler677
+              </a>
+              <a
+                href={BEHANCE_URL}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center gap-2 text-sm"
+                style={{ color: COLORS.muted, fontFamily: "Inter, sans-serif" }}
+              >
+                <ArrowUpRight size={16} style={{ color: COLORS.accent }} />
+                Behance
+              </a>
+            </div>
+          </div>
+        </Reveal>
+
+        <Reveal>
+          {submitted ? (
+            <div
+              className="p-8 rounded-md border"
+              style={{ borderColor: COLORS.border, background: COLORS.surface }}
+            >
+              <h3
+                className="text-lg"
+                style={{ fontFamily: "Fraunces, serif", color: COLORS.text }}
+              >
+                {isOngoing ? "Got it — thanks!" : "Thanks — that's in."}
+              </h3>
+              <p
+                className="mt-2 text-sm leading-relaxed"
+                style={{ color: COLORS.muted, fontFamily: "Inter, sans-serif" }}
+              >
+                {supabaseClient
+                  ? isOngoing
+                    ? "Your long-term inquiry has been sent to SeaNova. We'll reach out to talk through an ongoing plan."
+                    : "Your project details have been sent to SeaNova. We'll get back to you soon."
+                  : "This form is a visual prototype and isn't connected to a live inbox yet. Once it's wired up, submissions will land straight in your email."}
+              </p>
+              <button
+                onClick={() => setSubmitted(false)}
+                className="mt-6 text-sm"
+                style={{ color: COLORS.accent, fontFamily: "Inter, sans-serif" }}
+              >
+                Back to form
+              </button>
+            </div>
+          ) : (
+            <form onSubmit={handleSubmit} className="grid sm:grid-cols-2 gap-4">
+              <input
+                type="text"
+                name="website"
+                value={form.website}
+                onChange={(e) => update("website", e.target.value)}
+                tabIndex="-1"
+                autoComplete="off"
+                aria-hidden="true"
+                style={{ position: "absolute", left: "-9999px", width: "1px", height: "1px", opacity: 0 }}
+              />
+              <div className="sm:col-span-1">
+                <label className={labelClass} style={{ color: COLORS.mutedDim }}>
+                  Name
+                </label>
+                <input
+                  required
+                  value={form.name}
+                  onChange={(e) => update("name", e.target.value)}
+                  className="w-full px-3 py-2.5 rounded border text-sm outline-none"
+                  style={inputStyle}
+                />
+              </div>
+              <div className="sm:col-span-1">
+                <label className={labelClass} style={{ color: COLORS.mutedDim }}>
+                  Email
+                </label>
+                <input
+                  required
+                  type="email"
+                  value={form.email}
+                  onChange={(e) => update("email", e.target.value)}
+                  className="w-full px-3 py-2.5 rounded border text-sm outline-none"
+                  style={inputStyle}
+                />
+              </div>
+              <div className="sm:col-span-2">
+                <label className={labelClass} style={{ color: COLORS.mutedDim }}>
+                  Business / Brand
+                </label>
+                <input
+                  value={form.brand}
+                  onChange={(e) => update("brand", e.target.value)}
+                  className="w-full px-3 py-2.5 rounded border text-sm outline-none"
+                  style={inputStyle}
+                />
+              </div>
+              <div className="sm:col-span-1">
+                <label className={labelClass} style={{ color: COLORS.mutedDim }}>
+                  {isOngoing ? "What You Need Ongoing" : "Service Needed"}
+                </label>
+                <select
+                  value={form.service}
+                  onChange={(e) => update("service", e.target.value)}
+                  className="w-full px-3 py-2.5 rounded border text-sm outline-none"
+                  style={inputStyle}
+                >
+                  {(isOngoing
+                    ? ["Thumbnails", "Video Editing", "Thumbnails + Video Editing", "Other"]
+                    : ["Website", "Thumbnail", "Video Editing", "Ongoing / Retainer Work", "Other"]
+                  ).map((opt) => (
+                    <option key={opt} value={opt} style={{ background: COLORS.surface }}>
+                      {opt}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              {isOngoing && (
+                <div className="sm:col-span-1">
+                  <label className={labelClass} style={{ color: COLORS.mutedDim }}>
+                    How Much Per Month
+                  </label>
+                  <select
+                    value={form.volume}
+                    onChange={(e) => update("volume", e.target.value)}
+                    className="w-full px-3 py-2.5 rounded border text-sm outline-none"
+                    style={inputStyle}
+                  >
+                    {["1–4 per month", "5–8 per month", "9–15 per month", "15+ per month", "Not sure yet"].map(
+                      (opt) => (
+                        <option key={opt} value={opt} style={{ background: COLORS.surface }}>
+                          {opt}
+                        </option>
+                      )
+                    )}
+                  </select>
+                </div>
+              )}
+              {isOngoing && (
+                <div className="sm:col-span-2">
+                  <label className={labelClass} style={{ color: COLORS.mutedDim }}>
+                    Your Channel / Page Link
+                  </label>
+                  <input
+                    placeholder="YouTube, Instagram, or wherever you post"
+                    value={form.channel}
+                    onChange={(e) => update("channel", e.target.value)}
+                    className="w-full px-3 py-2.5 rounded border text-sm outline-none"
+                    style={inputStyle}
+                  />
+                </div>
+              )}
+              <div className="sm:col-span-1">
+                <label className={labelClass} style={{ color: COLORS.mutedDim }}>
+                  {isOngoing ? "Monthly Budget" : "Budget Range"}
+                </label>
+                <input
+                  placeholder={isOngoing ? "e.g. ₹3,000–₹10,000 / month" : "e.g. ₹1,000–₹5,000"}
+                  value={form.budget}
+                  onChange={(e) => update("budget", e.target.value)}
+                  className="w-full px-3 py-2.5 rounded border text-sm outline-none"
+                  style={inputStyle}
+                />
+              </div>
+              <div className={isOngoing ? "sm:col-span-1" : "sm:col-span-2"}>
+                <label className={labelClass} style={{ color: COLORS.mutedDim }}>
+                  {isOngoing ? "When Do You Want to Start" : "Timeline"}
+                </label>
+                <input
+                  placeholder={isOngoing ? "e.g. Right away, or next month" : "e.g. Within 2 weeks"}
+                  value={form.timeline}
+                  onChange={(e) => update("timeline", e.target.value)}
+                  className="w-full px-3 py-2.5 rounded border text-sm outline-none"
+                  style={inputStyle}
+                />
+              </div>
+              <div className="sm:col-span-2">
+                <label className={labelClass} style={{ color: COLORS.mutedDim }}>
+                  {isOngoing ? "Tell Us About Your Content & Style" : "Project Description"}
+                </label>
+                <textarea
+                  rows={4}
+                  placeholder={
+                    isOngoing
+                      ? "What kind of content do you make? Any style or references you like?"
+                      : ""
+                  }
+                  value={form.project}
+                  onChange={(e) => update("project", e.target.value)}
+                  className="w-full px-3 py-2.5 rounded border text-sm outline-none resize-none"
+                  style={inputStyle}
+                />
+              </div>
+              <div className="sm:col-span-2 mt-2">
+                {submitError && (
+                  <p className="mb-3 text-xs" style={{ color: COLORS.offer, fontFamily: "Inter, sans-serif" }}>
+                    {submitError}
+                  </p>
+                )}
+                <PrimaryButton className="w-full justify-center" disabled={submitting}>
+                  {submitting ? "Sending..." : isOngoing ? "Start the Conversation" : "Start My Project"}
+                </PrimaryButton>
+              </div>
+            </form>
+          )}
+        </Reveal>
+      </div>
+    </section>
+  );
+}
+
+/* The "Talk to SeaNova" experience is now handled by the real ElevenLabs
+   Convai widget embedded directly in the page (see the <elevenlabs-convai>
+   element and its script in the document head) — it renders its own
+   floating call/chat button, so no placeholder component is needed here. */
+
+function Footer() {
+  return (
+    <footer className="border-t px-5 sm:px-8 py-14" style={{ borderColor: COLORS.border }}>
+      <div className="max-w-6xl mx-auto flex flex-col sm:flex-row justify-between gap-10">
+        <div>
+          <span
+            className="text-lg"
+            style={{ fontFamily: "Fraunces, serif", color: COLORS.text }}
+          >
+            SeaNova
+          </span>
+          <p
+            className="mt-2 text-sm max-w-xs leading-relaxed"
+            style={{ color: COLORS.mutedDim, fontFamily: "Inter, sans-serif" }}
+          >
+            Creative solutions for modern businesses and creators.
+          </p>
+        </div>
+        <div className="flex flex-wrap gap-x-10 gap-y-4">
+          <div className="flex flex-col gap-2">
+            {["Home", "Services", "Work"].map((l) => (
+              <a
+                key={l}
+                href={`#${l.toLowerCase()}`}
+                className="text-sm"
+                style={{ color: COLORS.muted, fontFamily: "Inter, sans-serif" }}
+              >
+                {l}
+              </a>
+            ))}
+          </div>
+          <div className="flex flex-col gap-2">
+            {["About", "Contact"].map((l) => (
+              <a
+                key={l}
+                href={`#${l.toLowerCase()}`}
+                className="text-sm"
+                style={{ color: COLORS.muted, fontFamily: "Inter, sans-serif" }}
+              >
+                {l}
+              </a>
+            ))}
+            <a
+              href="#terms"
+              className="text-sm"
+              style={{ color: COLORS.muted, fontFamily: "Inter, sans-serif" }}
+            >
+              Terms
+            </a>
+            <a
+              href="./privacy.html"
+              className="text-sm"
+              style={{ color: COLORS.muted, fontFamily: "Inter, sans-serif" }}
+            >
+              Privacy Policy
+            </a>
+          </div>
+          <div className="flex flex-col gap-2">
+            <a
+              href="https://instagram.com/sea.ntherizzler677"
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center gap-2 text-sm"
+              style={{ color: COLORS.muted, fontFamily: "Inter, sans-serif" }}
+            >
+              <Instagram size={15} />
+              Instagram
+            </a>
+          </div>
+        </div>
+      </div>
+    </footer>
+  );
+}
+
+/* --------------------------------- app ------------------------------------ */
+
+function SeaNovaWebsite() {
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [contactMode, setContactMode] = useState("project");
+
+  function goToContact(mode) {
+    setContactMode(mode);
+    requestAnimationFrame(() => {
+      const el = document.getElementById("contact");
+      if (el) el.scrollIntoView({ behavior: "smooth" });
+    });
+  }
+
+  return (
+    <div style={{ background: COLORS.base, minHeight: "100vh" }}>
+      <Nav menuOpen={menuOpen} setMenuOpen={setMenuOpen} onContactClick={goToContact} />
+      <Hero onContactClick={goToContact} />
+      <TrustSection />
+      <Services onContactClick={goToContact} />
+      <OngoingWork onContactClick={goToContact} />
+      <Portfolio />
+      <ReviewsSection />
+      <WhySeaNova />
+      <Process />
+      <SimpleTerms />
+      <SeaNovaPayment />
+      <ContactSection mode={contactMode} />
+      <Footer />
+    </div>
+  );
+}
+
+const root = ReactDOM.createRoot(document.getElementById("root"));
+root.render(<SeaNovaWebsite />);
+
+</script>
+</body>
+</html>
