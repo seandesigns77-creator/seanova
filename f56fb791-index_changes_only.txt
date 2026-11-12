@@ -1,0 +1,54 @@
+SeaNova index.html — ONLY the changed code (Oct 30, 2026)
+Everything else in the file is unchanged.
+
+CHANGE 1 — remove "advertising" from the "One Creative Studio" card (about line 359)
+OLD:
+    description: "Websites, thumbnails, video editing, and advertising — from a single team.",
+NEW:
+    description: "Websites, thumbnails, and video editing — from a single team.",
+
+CHANGE 2 — remove "advertisement" from the "We Create" step (about line 377)
+OLD:
+    description: "SeaNova produces the website, thumbnail, video, or advertisement.",
+NEW:
+    description: "SeaNova produces the website, thumbnail, or video.",
+
+CHANGE 3 — remove "advertising creatives" from the hero paragraph (about line 660)
+OLD:
+              high-quality websites, thumbnails, videos, and advertising creatives.
+NEW:
+              high-quality websites, thumbnails, and videos.
+
+CHANGE 4 — add rating follow-up messages (new constant, placed just after the PROCESS list, about line 386)
+ADD:
+/* Follow-up question shown under the star rating in the review form.
+   Low ratings ask what went wrong; high ratings ask what they enjoyed. */
+const RATING_PROMPTS = {
+  1: "Sorry the experience was bad. What went wrong? Tell us so we can make it right.",
+  2: "Sorry it wasn't great. What could we have done better?",
+  3: "Thanks for your rating. What would make your experience a 5 next time?",
+  4: "Glad it went well. What could we improve?",
+  5: "Thank you! What did you enjoy most?",
+};
+
+CHANGE 5 — show the message under the stars in the review form (about line 1322)
+OLD:
+                        <Star size={22} filled={n <= form.rating} style={{ color: COLORS.accent }} />
+                      </button>
+                    ))}
+                  </div>
+                </div>
+NEW:
+                        <Star size={22} filled={n <= form.rating} style={{ color: COLORS.accent }} />
+                      </button>
+                    ))}
+                  </div>
+                  {form.rating > 0 && (
+                    <p
+                      className="mt-2 text-sm"
+                      style={{ color: COLORS.muted, fontFamily: "Inter, sans-serif" }}
+                    >
+                      {RATING_PROMPTS[form.rating]}
+                    </p>
+                  )}
+                </div>
