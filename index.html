@@ -1263,15 +1263,23 @@ function ReviewsSection() {
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="grid gap-4">
-                <input
-                  type="text"
-                  name="website"
-                  value={form.website}
-                  onChange={(e) => update("website", e.target.value)}
-                  tabIndex="-1"
-                  autoComplete="off"
-                  aria-hidden="true"
-                  style={{ position: "absolute", left: "-9999px", width: "1px", height: "1px", opacity: 0 }}
+               <input
+  type="text"
+  name="website"
+  value={form.website}
+  onChange={(e) => update("website", e.target.value)}
+  tabIndex={-1}
+  autoComplete="new-password"
+  aria-hidden="true"
+  style={{
+    position: "absolute",
+    left: "-9999px",
+    width: "1px",
+    height: "1px",
+    opacity: 0,
+    pointerEvents: "none"
+  }}
+/>
                 />
                 <div>
                   <label className={labelClass} style={{ color: COLORS.mutedDim }}>
