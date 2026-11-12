@@ -1162,24 +1162,38 @@ function ReviewsSection() {
       return;
     }
 
-    if (supabaseClient) {
-      setSubmitting(true);
-      const { error } = await supabaseClient.from("reviews").insert([
-        {
-          name: form.name,
-          service: form.service,
-          rating: form.rating,
-          review_text: form.text,
-        },
-      ]);
-      setSubmitting(false);
-      if (error) {
-        setSubmitError("Something went wrong submitting your review. Please try again.");
-        return;
-      }
-    }
+  if (!supabaseClient) {
+  setSubmitError("Reviews are temporarily unavailable. Please try again later.");
+  return;
+}
 
-    setSubmitted(true);
+setSubmitting(true);
+
+try {
+  const { error } = await supabaseClient
+    .from("reviews")
+    .insert([
+      {
+        name: form.name,
+        service: form.service,
+        rating: form.rating,
+        review_text: form.text,
+      },
+    ]);
+
+  if (error) {
+    setSubmitError("Something went wrong submitting your review. Please try again.");
+    return;
+  }
+
+  setSubmitted(true);
+} catch (error) {
+  setSubmitError("Something went wrong submitting your review. Please try again.");
+} finally {
+  setSubmitting(false);
+}
+
+return;
   }
 
   const inputStyle = {
